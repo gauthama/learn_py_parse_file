@@ -6,21 +6,21 @@ prefix = "# Table format: "
 suffix = "D"
 
 
-import re
+# import re
 
 
-def extract_dim_using_regex(file_path):
-    pattern = r"^# Table format: (.+)D$"
+# def extract_dim_using_regex(file_path):
+#     pattern = r"^# Table format: (.+)D$"
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        header = f.readline().strip()
+#     with open(file_path, "r", encoding="utf-8") as f:
+#         header = f.readline().strip()
 
-    match = re.match(pattern, header)
-    if not match:
-        raise ValueError("Invalid table format header")
+#     match = re.match(pattern, header)
+#     if not match:
+#         raise ValueError("Invalid table format header")
 
-    value = match.group(1)
-    print(value)
+#     value = match.group(1)
+#     print(value)
 
 
 
@@ -39,17 +39,39 @@ def extract_dim_from_header(header, prefix, suffix):
 
 
 def process_data_file(file_path):
+    values = []
     with open(file_path, "r", encoding="utf-8") as f:
         for i, line in enumerate(f):
+            # Extract dimension from the header line
             if i == 0:
-                value = extract_dim_from_header(line, prefix, suffix)
+                dim_value = extract_dim_from_header(line, prefix, suffix)
+                dim_value = int(dim_value)  # convert dimension value to integer
                 continue
+            
+            # skip empty lines and comments
+            if not line.strip() or line.startswith("#"):
+                continue  
+            
+            # Convert the line into a list of floats
+            num_list = [float(x) for x in line.split()]
+            print(f"Extracted values from line {i+1}: {num_list}")
+            values.append(num_list)
+            
 
-        # process remaining lines here
-            print(line.strip())
+    print(f"Extracted values from file: {values}")
+    dim_list = values[:dim_value]
+    dim_list = [int(x[0]) for x in dim_list]
+    # extract dimension matrix from the file data
+    dim_data_matrix = values[dim_value: dim_value + dim_value]
+    data_matrix = values[dim_value + dim_value:]
+
+    print(f"Extracted dimension list: {dim_list}")
+    print(f"Extracted dimension data matrix: {dim_data_matrix}")
+    print(f"Extracted data matrix: {data_matrix}")
+
 
 process_data_file(file_path)
-extract_dim_using_regex(file_path)
+# extract_dim_using_regex(file_path)
 
 # def new_func(file_path):
 #     try:
