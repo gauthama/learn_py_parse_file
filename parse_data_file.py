@@ -23,6 +23,16 @@ suffix = "D"
 #     print(value)
 
 
+# Input: [[0.0, 50.0], [0.0, 5.0, 10.0, 15.0], [0.0, 25.0, 50.0]]
+# Output{'D1': [0.0, 25.0, 50.0], 'D2': [0.0, 5.0, 10.0, 15.0], 'D3': [0.0, 50.0]}
+
+def process_dimension_data(dim_data_matrix):
+    dim_data_dict = {}
+    for i, values in enumerate(reversed(dim_data_matrix)):
+        dim_key = f"D{i+1}"
+        dim_data_dict[dim_key] = values
+    #print(f"Processed dimension data dictionary: {dim_data_dict}")
+    return dim_data_dict
 
 
 def extract_dim_from_header(header, prefix, suffix):
@@ -54,11 +64,11 @@ def process_data_file(file_path):
             
             # Convert the line into a list of floats
             num_list = [float(x) for x in line.split()]
-            print(f"Extracted values from line {i+1}: {num_list}")
+            #print(f"Extracted values from line {i+1}: {num_list}")
             values.append(num_list)
             
 
-    print(f"Extracted values from file: {values}")
+    #print(f"Extracted values from file: {values}")
     dim_list = values[:dim_value]
     dim_list = [int(x[0]) for x in dim_list]
     # extract dimension matrix from the file data
@@ -67,8 +77,11 @@ def process_data_file(file_path):
 
     print(f"Extracted dimension list: {dim_list}")
     print(f"Extracted dimension data matrix: {dim_data_matrix}")
-    print(f"Extracted data matrix: {data_matrix}")
+    #print(f"Extracted data matrix: {data_matrix}")
 
+    dim_data_dict = process_dimension_data(dim_data_matrix)
+    print(f"Dimension data dictionary: {dim_data_dict}")
+    
 
 process_data_file(file_path)
 # extract_dim_using_regex(file_path)
