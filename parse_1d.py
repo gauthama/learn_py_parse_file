@@ -1,4 +1,4 @@
-def parse_m1d_data_file(file_path):
+def parse_1d_data_file(file_path):
     result = []
 
     with open(file_path, "r", encoding="utf-8") as f:
