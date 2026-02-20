@@ -20,5 +20,5 @@ def parse_1d_data_file(file_path):
 # Usage
 if __name__ == "__main__":
     file_path = "sample_formats/data/1D.data"
-    output = parse_m1d_data_file(file_path)
+    output = parse_1d_data_file(file_path)
     print(output)
