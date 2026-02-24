@@ -36,14 +36,14 @@ def process_dimension_data(dim_data_matrix):
 
 
 def extract_dim_from_header(header, prefix, suffix):
-    print(f"Header: {header.strip()}")
+    #print(f"Header: {header.strip()}")
     header = header.strip()  # remove leading/trailing whitespace
     if header.startswith(prefix) and header.endswith(suffix):
         value = header[len(prefix):-len(suffix)]  # remove prefix and trailing suffix    
     else:
         raise ValueError("Invalid table format header")
 
-    print(f"Extracted value (Dimension): {value}")
+    #print(f"Extracted value (Dimension): {value}")
     return value
 
 
@@ -82,8 +82,9 @@ def process_data_file(file_path):
     dim_data_dict = process_dimension_data(dim_data_matrix)
     print(f"Dimension data dictionary: {dim_data_dict}")
     
-
-process_data_file(file_path)
+# Usage
+if __name__ == "__main__":
+    process_data_file(file_path)
 # extract_dim_using_regex(file_path)
 
 # def new_func(file_path):
