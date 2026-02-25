@@ -1,7 +1,4 @@
 
-
-
-
 # Sample header content:
     # Table format: 2D
     # table_unit = Ohm
@@ -50,51 +47,59 @@ def reverse_dimension_units(units_dict):
     return result
 
 def parse_header_of_data_file(file_path):
+    table_unit = None
+
     dimension = get_dimension_from_data_file(file_path)
+    #print(f"dimension: {dimension}")
+    if dimension == 'T1': # for M1D format
+        dimension = 2
+    elif dimension == 'T3': # for MM1D format
+        dimension = 3 #FIXME: is dimension always 3 for MM1D format?
+    else:
+        dimension = int(dimension)
 
-    units = {}
-
+    axis_units = {}
+    
     # initialize units dictionary with None for all axes
-    for i in range(1, int(dimension)+1):
-        units[str(i)] = None
+    for i in range(1, dimension+1):
+        axis_units[str(i)] = None
 
     # 
-    unit_line_pattern = re.compile(r"#\s*axis(\d+)_unit\s*=\s*(.+)")
+    axis_unit_line_pattern = re.compile(r"#\s*axis(\d+)_unit\s*=\s*(.+)")
 
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line and line.startswith("#"):
 
-                # Solution using string methods
-                # # remove leading '#'
-                # content = line[1:].strip()
-
-                # if content.startswith("axis") and "_unit" in content:
-                #     left, right = content.split("=", 1)
-                #     axis_num = left.replace("axis", "").replace("_unit", "").strip()
-                #     unit = right.strip()
-
-                #     units[axis_num] = unit
-
-                # Solution using regular expressions
-                m = unit_line_pattern.match(line)
+                # Extract table unit
+                if line.startswith("# table_unit"):
+                    table_unit = line.split("=", 1)[1].strip()
+                
+                # Extract axis units using regex
+                m = axis_unit_line_pattern.match(line)
                 if m:
-                    units[m.group(1)] = m.group(2)
+                    axis_units[m.group(1)] = m.group(2)
             else:
                 break  # stop reading after the header section
 
-    print(f"Extracted units dictionary: {units}")
-    reversed_units = reverse_dimension_units(units)
-    print(f"Reversed units dictionary: {reversed_units}")
-    return dimension,reversed_units
+    #print(f"Extracted units dictionary: {axis_units}")
+    reversed_axis_units = reverse_dimension_units(axis_units)
+    #print(f"Reversed units dictionary: {reversed_axis_units}")
+    return dimension, reversed_axis_units, table_unit
 
 
 # Usage
 if __name__ == "__main__":
     file_path1 = "sample_formats/data/3D.data"
     output = parse_header_of_data_file(file_path1)
-    #print(output)
+    print(output)
     file_path2 = "sample_formats/data/2D.data"
     output = parse_header_of_data_file(file_path2)
-    #print(output)
+    print(output)
+    file_path3 = "sample_formats/data/M1D.data"
+    output = parse_header_of_data_file(file_path3)
+    print(output)
+    file_path4 = "sample_formats/data/MM1D.data"
+    output = parse_header_of_data_file(file_path4)
+    print(output)
