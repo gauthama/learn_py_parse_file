@@ -10,11 +10,10 @@ def get_dimension_from_data_file(file_path):
     return dimension
 
 
-def dimension_units_add_prefix(units_dict):
-    # build result dictionary
+def add_prefix_to_dictionary_keys(input_dict, prefix="D"):
     result = {}
-    for key in list(units_dict.keys()):
-        result[f"X{key}"] = units_dict[key]
+    for key in list(input_dict.keys()):
+        result[f"{prefix}{key}"] = input_dict[key]
 
     return result
 
@@ -79,7 +78,8 @@ def parse_header_of_data_file(file_path):
             else:
                 break  # stop reading after the header section
 
-    axis_units = dimension_units_add_prefix(axis_units)
+    axis_units = add_prefix_to_dictionary_keys(axis_units, prefix="X")
+    axis_tokens = add_prefix_to_dictionary_keys(axis_tokens, prefix="X")
 
     return {
         'table_unit': table_unit,
